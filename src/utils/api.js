@@ -14,7 +14,16 @@ const options = {
 };
 
 export const fetchDataFromApi = async (url) =>{
-    const {data} =await axios.get(`${BASE_URL}/${url}`,options)
-    return data;
+    try {
+      const {data} = await axios.get(`${BASE_URL}/${url}`, options);
+      return data;
+    } catch (error) {
+      if (error.response) {
+        throw new Error(`API Error: ${error.response.status}`);
+      } else if (error.request) {
+        throw new Error("Network error. Please check your connection.");
+      }
+      throw error;
+    }
 };
 

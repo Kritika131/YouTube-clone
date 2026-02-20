@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { Fragment, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LeftNavMenuItem from "./LeftNavMenuItem"
 import {categories} from "../utils/constants";
@@ -12,12 +12,18 @@ const LeftNav = () => {
   const clickHandler = (name, type)=>{
     switch(type){
       case "category":
-        return setSelectCategories(name)
-        
+        setSelectCategories(name);
+        navigate("/");
+        return;
       case "home":
-        return setSelectCategories(name)
+        setSelectCategories(name);
+        navigate("/");
+        return;
+      case "history":
+        navigate("/history");
+        return;
       case "menu":
-        return setSelectCategories(name)
+        return;
       default :
          break;
     }
@@ -27,20 +33,17 @@ const LeftNav = () => {
       <div className="flex px-5 flex-col">
           {categories.map((item)=>{
             return (
-              <> 
-                <LeftNavMenuItem 
-                   key={item.name}
+              <Fragment key={item.name}>
+                <LeftNavMenuItem
                     text={item.type==="home" ? "Home": item.name}
                     icon={item.icon}
-                    action={()=>{clickHandler(item.name, item.type);
-                    navigate("/");
-                    }}
+                    action={()=> clickHandler(item.name, item.type)}
                     className={`${selectCategories === item.name ? "bg-white/[0.15]":""}`}
                 />
                 {item.divider && (
                     <hr className="my-5 border-white/[0.2]" />
                 )}
-              </>
+              </Fragment>
             )
           })}
           <hr className="my-5 border-white/[0.2]" />

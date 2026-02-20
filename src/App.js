@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Feed from './components/Feed';
 import SearchResults from './components/SearchResults';
 import VideoDetails from './components/VideoDetails';
+import WatchHistory from './components/WatchHistory';
 import { AppContext } from './context/contextApi';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path = "/" exact element={<Feed/>}/>
         <Route path ="/searchResult/:searchQuery" element={<SearchResults/>}/>
         <Route path="/video/:id" element={<VideoDetails/>}/>
+        <Route path="/history" element={<WatchHistory/>}/>
       </Routes>
     </div>
     </BrowserRouter>

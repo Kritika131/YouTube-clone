@@ -28,10 +28,7 @@ const Header = () => {
   }
 
   const {pathname} =useLocation();
-  console.log("pathname ",pathname);
-  const pageName = pathname?.split("/")?.filter(Boolean)?.[0]
-  console.log("pagenaem ",pageName);
-  // const {} =useContext(Context);
+  const pageName = pathname?.split("/")?.filter(Boolean)?.[0];
   return (
     <div className='sticky top-0 z-10 flex flex-row items-center justify-between h-14 px-4 md:px-5 bg-white dark:bg-black '>
       {loading && <Loader/>}
