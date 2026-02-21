@@ -4,7 +4,6 @@ import { fetchDataFromApi } from '../utils/api'
 import { Context } from '../context/contextApi'
 import LeftNav from './LeftNav'
 import SearchResultVideo from './SearchResultVideo'
-import SkeletonCard from './SkeletonCard'
 
 const SearchResults = () => {
   const [result, setResult] = useState([]);
@@ -15,15 +14,7 @@ const SearchResults = () => {
   const {loading, setLoading} = useContext(Context);
   const observerRef = useRef(null);
 
-  useEffect(()=>{
-    document.getElementById("root").classList.remove("custom-h");
-    setResult([]);
-    setContinuation(null);
-    setError(null);
-    fetchSearchResults();
-  },[searchQuery])
-
-  const fetchSearchResults = () => {
+  const fetchSearchResults = useCallback(() => {
     setLoading(true);
     fetchDataFromApi(`search/?q=${searchQuery}`).then((res)=>{
       setResult(res?.contents || []);
@@ -33,7 +24,15 @@ const SearchResults = () => {
       setError("Failed to load search results.");
       setLoading(false);
     });
-  }
+  }, [searchQuery, setLoading]);
+
+  useEffect(()=>{
+    document.getElementById("root").classList.remove("custom-h");
+    setResult([]);
+    setContinuation(null);
+    setError(null);
+    fetchSearchResults();
+  },[searchQuery, fetchSearchResults])
 
   const loadMore = useCallback(() => {
     if(loadingMore || !continuation) return;

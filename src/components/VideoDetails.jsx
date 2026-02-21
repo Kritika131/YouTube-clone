@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import ReactPlayer from "react-player/youtube"
 import { BsFillCheckCircleFill } from 'react-icons/bs'
@@ -18,20 +18,7 @@ const VideoDetails = () => {
 
   const {setLoading} =useContext(Context);
 
-  useEffect(()=>{
-    document.getElementById("root").classList.add("custom-h");
-    setError(null);
-    fetchVideoDetails();
-    fetchRelatedVideos();
-    // Save to watch history
-    const history = JSON.parse(localStorage.getItem("watchHistory") || "[]");
-    const existingIdx = history.findIndex(item => item.id === id);
-    if(existingIdx > -1) history.splice(existingIdx, 1);
-    history.unshift({ id, timestamp: Date.now() });
-    localStorage.setItem("watchHistory", JSON.stringify(history.slice(0, 50)));
-  },[id])
-
-  const fetchVideoDetails =()=>{
+  const fetchVideoDetails = useCallback(()=>{
       setLoading(true);
       fetchDataFromApi(`video/details/?id=${id}`).then((res)=>{
         setVideo(res);
@@ -52,15 +39,28 @@ const VideoDetails = () => {
         setError("Failed to load video details.");
         setLoading(false);
       })
-  }
+  }, [id, setLoading]);
 
-  const fetchRelatedVideos=()=>{
+  const fetchRelatedVideos = useCallback(()=>{
     fetchDataFromApi(`video/related-contents/?id=${id}`).then((res)=>{
       setRelatedVideo(res);
     }).catch(()=>{
       // Related videos failing is non-critical
     })
-  }
+  }, [id]);
+
+  useEffect(()=>{
+    document.getElementById("root").classList.add("custom-h");
+    setError(null);
+    fetchVideoDetails();
+    fetchRelatedVideos();
+    // Save to watch history
+    const history = JSON.parse(localStorage.getItem("watchHistory") || "[]");
+    const existingIdx = history.findIndex(item => item.id === id);
+    if(existingIdx > -1) history.splice(existingIdx, 1);
+    history.unshift({ id, timestamp: Date.now() });
+    localStorage.setItem("watchHistory", JSON.stringify(history.slice(0, 50)));
+  },[id, fetchVideoDetails, fetchRelatedVideos])
 
   if(error) {
     return (

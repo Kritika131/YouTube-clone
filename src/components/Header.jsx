@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { Link,useLocation,useNavigate } from 'react-router-dom'
 
-import logo from "../images/youTube.png"
+
 import mobileLogo from "../images/youtube-logo.png"
 
 import {SlMenu} from "react-icons/sl"
